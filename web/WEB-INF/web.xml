@@ -13,4 +13,15 @@
         <servlet-name>DeviceServlet</servlet-name>
         <url-pattern>/devices/*</url-pattern>
     </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>LocationServlet</servlet-name>
+        <servlet-class>Location.LocationServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LocationServlet</servlet-name>
+        <url-pattern>/locations/*</url-pattern>
+    </servlet-mapping>
 </web-app>
