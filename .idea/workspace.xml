@@ -7,15 +7,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c5fa4292-3e55-4952-bf0d-cc4cb5bef30c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.README.md.swp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/WebServer_Alternanza_war_exploded/WEB-INF/classes/Device/Device.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/WebServer_Alternanza_war_exploded/WEB-INF/classes/Device/Device.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/WebServer_Alternanza_war_exploded/WEB-INF/classes/Device/DeviceBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/WebServer_Alternanza_war_exploded/WEB-INF/classes/Device/DeviceBean.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/WebServer_Alternanza_war_exploded/WEB-INF/classes/Device/ReadingBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/WebServer_Alternanza_war_exploded/WEB-INF/classes/Device/ReadingBean.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/WebServer_Alternanza_war_exploded/WEB-INF/classes/SQL/SQLConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/WebServer_Alternanza_war_exploded/WEB-INF/classes/SQL/SQLConnection.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/WebServer_Alternanza/Device/Device.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WebServer_Alternanza/Device/Device.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/WebServer_Alternanza/Device/DeviceBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WebServer_Alternanza/Device/DeviceBean.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/WebServer_Alternanza/Device/ReadingBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WebServer_Alternanza/Device/ReadingBean.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/WebServer_Alternanza/SQL/SQLConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/WebServer_Alternanza/SQL/SQLConnection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/query.sql" beforeDir="false" afterPath="$PROJECT_DIR$/query.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Device/Device.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Device/Device.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Device/DeviceBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Device/DeviceBean.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Device/ReadingBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Device/ReadingBean.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Device/ValueBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Device/ValueBean.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SQL/SQLConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SQL/SQLConnection.java" afterDir="false" />
@@ -62,11 +64,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Device/Device.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="665">
-              <caret line="229" column="53" selection-start-line="229" selection-start-column="53" selection-end-line="229" selection-end-column="53" />
+            <state relative-caret-position="174">
+              <caret line="149" selection-start-line="149" selection-end-line="149" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#6534#6535#0" expanded="true" />
+                <element signature="e#7993#7994#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -75,35 +77,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/SQL/SQLConnection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="337">
-              <caret line="191" column="43" lean-forward="true" selection-start-line="191" selection-start-column="43" selection-end-line="191" selection-end-column="43" />
+            <state relative-caret-position="99">
+              <caret line="300" selection-start-line="300" selection-end-line="300" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#726#727#0" expanded="true" />
-                <element signature="e#755#756#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Location/LocationServlet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="427">
-              <caret line="62" column="31" selection-start-line="62" selection-start-column="27" selection-end-line="62" selection-end-column="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Device/DeviceBean.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
-              <caret line="41" selection-start-line="41" selection-end-line="41" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#642#643#0" expanded="true" />
-                <element signature="e#673#674#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -112,14 +89,14 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Device/ReadingBean.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="40" selection-start-line="40" selection-end-line="40" />
+            <state relative-caret-position="290">
+              <caret line="39" column="14" selection-start-line="39" selection-start-column="14" selection-end-line="39" selection-end-column="14" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1055#1056#0" expanded="true" />
-                <element signature="e#1074#1075#0" expanded="true" />
-                <element signature="e#1242#1243#0" expanded="true" />
-                <element signature="e#1261#1262#0" expanded="true" />
+                <element signature="e#1005#1006#0" expanded="true" />
+                <element signature="e#1022#1023#0" expanded="true" />
+                <element signature="e#1057#1058#0" expanded="true" />
+                <element signature="e#1078#1079#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -128,10 +105,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Device/ValueBean.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" selection-start-line="4" selection-end-line="4" />
+            <state relative-caret-position="125">
+              <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="95" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#236#252#0" expanded="true" />
                 <element signature="e#564#565#0" expanded="true" />
                 <element signature="e#602#603#0" expanded="true" />
               </folding>
@@ -152,6 +130,9 @@
     <findStrings>
       <find>read</find>
       <find>add</find>
+      <find>getDevice</find>
+      <find>get</find>
+      <find>doPost</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -171,11 +152,11 @@
         <option value="$PROJECT_DIR$/src/Location/LocationServlet.java" />
         <option value="$PROJECT_DIR$/src/SQLConnection.java" />
         <option value="$PROJECT_DIR$/src/SQL/Available.java" />
-        <option value="$PROJECT_DIR$/src/Device/ReadingBean.java" />
-        <option value="$PROJECT_DIR$/src/Device/ValueBean.java" />
         <option value="$PROJECT_DIR$/src/Device/DeviceBean.java" />
-        <option value="$PROJECT_DIR$/src/Device/Device.java" />
+        <option value="$PROJECT_DIR$/src/Device/ValueBean.java" />
+        <option value="$PROJECT_DIR$/src/Device/ReadingBean.java" />
         <option value="$PROJECT_DIR$/src/SQL/SQLConnection.java" />
+        <option value="$PROJECT_DIR$/src/Device/Device.java" />
       </list>
     </option>
   </component>
@@ -197,6 +178,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -249,14 +231,13 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1549876803828" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1549906372473" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/web/WEB-INF/lib/mysql-connector-java-5.1.47.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -282,7 +263,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.SQLConnection">
+  <component name="RunManager" selected="Tomcat Server.Tomcat 9.0.14">
     <configuration name="SQLConnection" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="SQL.SQLConnection" />
       <module name="WebServer_Alternanza" />
@@ -398,12 +379,13 @@
       <workItem from="1549695635305" duration="12952000" />
       <workItem from="1549710540050" duration="12000" />
       <workItem from="1549710578982" duration="1418000" />
-      <workItem from="1549868942699" duration="7890000" />
+      <workItem from="1549868942699" duration="16739000" />
+      <workItem from="1549896774282" duration="9692000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53090000" />
+    <option name="totallyTimeSpent" value="71631000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -416,9 +398,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="25" width="1920" height="1055" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.53979737" visible="true" weight="0.20053476" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.53979737" visible="true" weight="0.2026738" />
       <window_info id="Designer" order="1" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -428,12 +409,12 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49572194" weight="0.2505423" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49946523" weight="0.3991323" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49946523" weight="0.61713666" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49946523" weight="0.3286334" />
       <window_info anchor="bottom" id="Application Servers" order="7" sideWeight="0.49946523" weight="0.3286334" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.3275488" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3275488" />
       <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50427806" side_tool="true" weight="0.2505423" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.30260304" />
@@ -446,10 +427,10 @@
       <window_info anchor="right" id="Maven" order="3" />
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
-      <window_info anchor="right" id="Database" order="6" weight="0.32994652" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Theme Preview" order="8" />
-      <window_info anchor="right" auto_hide="true" id="Structure" order="9" show_stripe_button="false" sideWeight="0.4602026" side_tool="true" weight="0.12780748" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Theme Preview" order="7" />
+      <window_info anchor="right" auto_hide="true" id="Structure" order="8" show_stripe_button="false" sideWeight="0.4602026" side_tool="true" weight="0.12780748" />
+      <window_info anchor="right" id="Database" order="9" weight="0.32994652" />
     </layout>
     <layout-to-restore>
       <window_info id="Designer" order="0" />
@@ -533,6 +514,30 @@
     <MESSAGE value="Riformattazione endpoint e aggiunto SQLConnection" />
     <option name="LAST_COMMIT_MESSAGE" value="Riformattazione endpoint e aggiunto SQLConnection" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/SQL/SQLConnection.java</url>
+          <line>296</line>
+          <properties />
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/SQL/SQLConnection.java</url>
+          <line>300</line>
+          <properties />
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Device/Device.java</url>
+          <line>123</line>
+          <properties />
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/devices.java" />
     <entry file="file://$PROJECT_DIR$/src/Device.java" />
@@ -548,13 +553,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SQL/Available.java" />
-    <entry file="file://$PROJECT_DIR$/web/WEB-INF/web.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="31" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jrt:///usr/lib/jvm/java-1.11.0-openjdk-amd64!/java.base/java/util/function/Predicate.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -564,41 +562,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Location/LocationServlet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="62" column="31" selection-start-line="62" selection-start-column="27" selection-end-line="62" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Device/ReadingBean.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="40" selection-start-line="40" selection-end-line="40" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1055#1056#0" expanded="true" />
-            <element signature="e#1074#1075#0" expanded="true" />
-            <element signature="e#1242#1243#0" expanded="true" />
-            <element signature="e#1261#1262#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Device/ValueBean.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#564#565#0" expanded="true" />
-            <element signature="e#602#603#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="936">
+          <caret line="111" column="64" selection-start-line="111" selection-start-column="64" selection-end-line="111" selection-end-column="64" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Device/DeviceBean.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="41" selection-start-line="41" selection-end-line="41" />
+        <state relative-caret-position="425">
+          <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#642#643#0" expanded="true" />
@@ -607,25 +579,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SQL/SQLConnection.java">
+    <entry file="file://$PROJECT_DIR$/src/Device/ValueBean.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="191" column="43" lean-forward="true" selection-start-line="191" selection-start-column="43" selection-end-line="191" selection-end-column="43" />
+        <state relative-caret-position="125">
+          <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="95" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#726#727#0" expanded="true" />
-            <element signature="e#755#756#0" expanded="true" />
+            <element signature="e#236#252#0" expanded="true" />
+            <element signature="e#564#565#0" expanded="true" />
+            <element signature="e#602#603#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Device/ReadingBean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="39" column="14" selection-start-line="39" selection-start-column="14" selection-end-line="39" selection-end-column="14" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1005#1006#0" expanded="true" />
+            <element signature="e#1022#1023#0" expanded="true" />
+            <element signature="e#1057#1058#0" expanded="true" />
+            <element signature="e#1078#1079#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="31" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SQL/SQLConnection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="99">
+          <caret line="300" selection-start-line="300" selection-end-line="300" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Device/Device.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
-          <caret line="229" column="53" selection-start-line="229" selection-start-column="53" selection-end-line="229" selection-end-column="53" />
+        <state relative-caret-position="174">
+          <caret line="149" selection-start-line="149" selection-end-line="149" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6534#6535#0" expanded="true" />
+            <element signature="e#7993#7994#0" expanded="true" />
           </folding>
         </state>
       </provider>

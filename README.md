@@ -1,9 +1,11 @@
 # Webserver
 
-WHAT WORKS:
+WORKING:
 	Adding new device via POST at /devices;
 
+NOT WORKING:
+    
+	
 TODOLIST:
-
-	Creare gli ultimi Endpoint;
+	MAC not found in doPost	
 	

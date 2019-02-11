@@ -23,19 +23,12 @@ import SQL.SQLConnection;
 public class Device extends HttpServlet {
 	final String [] SUPPORTED_OPERATIONS = new String[]{"devices", "readings", "\\d+"};
 
-	private SQLConnection sqlConnection;
 
-	{
-		try {
-			sqlConnection = SQLConnection.getInstance("","","");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private final static String CONN_STRING = "jdbc:mysql://localhost:3306/test_alternanza?user=root&password=123456";
+	private final static String dbName = "test_alternanza";
+	private final static String dbUser = "root";
+	private final static String dbUserPwd = "123456";
+	private final static String CONN_STRING = "jdbc:mysql://localhost:3306/"+dbName+"?user="+dbUser+"&password="+dbUserPwd;
+	//private final static String CONN_STRING = "jdbc:mysql://localhost:3306/test_alternanza?user=root&password=123456";
 	final static boolean DEBUG = true;
 	private static final long serialVersionUID = 1L;
        
@@ -58,7 +51,7 @@ public class Device extends HttpServlet {
 			Ritorna le informazioni di un dispositivo
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
+			throws IOException {
 
 		/*
 			Getting endpoint option
@@ -91,7 +84,6 @@ public class Device extends HttpServlet {
 			out.append(getDevicesJson());
 			return;
 		}
-
 
 		/*
 		 * ENDPOINT: ritorna le letture di un dispositivo
@@ -130,7 +122,35 @@ public class Device extends HttpServlet {
 
 
 		if (endpoint.equals("current")) {
+			String deviceMac = request.getHeader("X-MAC-Address");
 
+			if (DEBUG) {
+				System.out.println("current deviceMac = "+deviceMac);
+			}
+			try {
+				SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);
+				int id = sqlConnection.getDeviceId(deviceMac);
+
+				Gson gson = new Gson();
+				String json = gson.toJson(sqlConnection.getDeviceReadings(id));
+
+				response.setStatus(200);
+				if (DEBUG) {
+					System.out.println("json = "+json);
+				}
+
+				out.println(json);
+				return;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			finally {
+				response.setStatus(204); //richiesta andata a buon fine ma non ha prodotto risultati
+				out.println("Non sono stati trovati.");
+				return;
+			}
 		}
 
 		/*
@@ -174,9 +194,14 @@ public class Device extends HttpServlet {
 
 		String json = request.getReader().lines()
 				.reduce("", (accumulator, actual) -> accumulator+"\n" + actual);
+		if (DEBUG) {
+			System.out.println(request.getHeader("X-MAC-Address"));
+		}
+		String deviceMac = request.getHeader("X-MAC-Address");
+
 
 		if (DEBUG) {
-			System.out.println("POST JSON received : \n\n"+json+"\n\n End JSON");
+			System.out.println("POST JSON received : \n\n"+json+"\n\nEnd JSON");
 		}
 
 		if (endpoint.equals("devices")) { //registrazione nuovo client
@@ -209,22 +234,44 @@ public class Device extends HttpServlet {
 		}
 
 		if(endpoint.equals("readings")) { //registrazione nuova reading
+			String device = strings[strings.length-2];
 
-			if (DEBUG) {
-				System.out.println("POST "+request.getRequestURI());
-			}
-
-			int id = parseAvailableId(strings[strings.length-2]);
-
-			response.setContentType("text/html");
-
-			if (id == -1) {
+			if (!device.equals("current")) {
 				response.setStatus(404);
-				out.append("ID non esistente o sbagliato");
+				out.append("Servizio non esistente");
 				return;
 			}
 
-			//addReading(2);
+
+			if (DEBUG) {
+
+				System.out.println("MAC = "+ deviceMac);
+				System.out.println("Headers = "+ response.getHeader("X-MAC-Address"));
+
+			}
+
+			if (deviceMac == null) {
+				response.setStatus(404);
+				out.append("MAC non presente");
+				return;
+			}
+
+
+			response.setContentType("text/html");
+
+			try {
+				addReading(json, deviceMac);
+			} catch (SQLException e) { //TODO: ricontrollare gli status error
+				e.printStackTrace();
+				response.setStatus(404);
+				out.append(e.getMessage());
+				return;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				response.setStatus(404);
+				out.append(e.getMessage());
+				return;
+			}
 
 			response.setStatus(201);
 			out.append("Lettura aggiunta con successo");
@@ -341,10 +388,12 @@ public class Device extends HttpServlet {
 		connection.addDevice(device);
 	}
 
-	private boolean addReading(String json) throws SQLException, ClassNotFoundException {
+	private boolean addReading(String json, String mac) throws SQLException, ClassNotFoundException {
 		Gson gson = new Gson();
 		ReadingBean reading = gson.fromJson(json, ReadingBean.class);
+		reading.setMac(mac.toLowerCase());
 		SQLConnection connection = SQLConnection.getInstance(CONN_STRING);
+		connection.addReading(reading);
 		return true;
 	}
 }

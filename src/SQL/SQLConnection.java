@@ -2,9 +2,12 @@ package SQL;
 
 import Device.DeviceBean;
 import Device.ReadingBean;
+import Device.ValueBean;
 
 import javax.xml.transform.Result;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /*
@@ -82,47 +85,6 @@ public class SQLConnection {
      */
 
 
-    private ResultSet doQuery(PreparedStatement pstmt, int mode) throws SQLException{
-
-        switch (mode) {
-            case SELECT:
-                pstmt.executeQuery();
-                return pstmt.getResultSet();
-        }
-
-        pstmt.execute();
-//        if (!pstmt.execute()) {
-//            if (DEBUG) {
-//                System.out.println("Errore nell'esecuzione della query "+pstmt);
-//            }
-//            throw new SQLException("Errore esecuzione query");
-//        }
-
-        ResultSet res = pstmt.getGeneratedKeys();
-
-        if (res.next()) {
-            if (DEBUG)
-                System.out.println("Generated id : "+res.getLong(1));
-        }
-
-//        else {
-//            throw new SQLException("doQuery() failed.");
-//        }
-
-        return res;
-
-
-//        try (ResultSet generatedKeys = preparedStmt.getGeneratedKeys()) {
-//            if (generatedKeys.next()) {
-//                System.out.println("*****"+generatedKeys.getLong(1));
-//            }
-//            else {
-//                throw new SQLException("Creating user failed, no ID obtained.");
-//            }
-//        }
-//
-
-    }
 
     public void getAllReadings() throws SQLException {
         if (conn == null) {
@@ -164,10 +126,10 @@ public class SQLConnection {
         PreparedStatement preparedStmt = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
         preparedStmt.setString(1,device.getMac());
         preparedStmt.setInt(2,device.getLocation());
-
+        preparedStmt.execute();
         try {
 
-            ResultSet res = doQuery(preparedStmt, INSERT);
+            ResultSet res = preparedStmt.getResultSet();
         }
         catch (SQLException e) {
             throw new SQLException("Errore nella query addDevice(): "+stmt);
@@ -188,6 +150,19 @@ public class SQLConnection {
      */
 
     public void addReading(final ReadingBean reading) throws SQLException, ClassNotFoundException {
+
+        int idDevice = getDeviceId(reading.getMac());
+
+        int kLocation = -1;
+        kLocation = getDeviceLocation(idDevice);
+
+        if (kLocation == -1) {
+            throw new SQLException("Location of the Device not found!");
+        }
+
+        final String stmt = "INSERT INTO Readings(data, kDevice,kLocation) " +
+                "VALUES(?, ?, ?);";
+
         if (DEBUG) {
             System.out.println("Provo a connettermi...");
         }
@@ -196,35 +171,158 @@ public class SQLConnection {
         conn = DriverManager.getConnection(CONN_STRING);
 
         if (DEBUG) {
-            System.out.println("Connesso");
+            System.out.println("Connesso" +
+                    "addReading() ...");
         }
-
-
-
-
-        int kLocation = -1;
-
-        if (kLocation == -1) {
-            throw new SQLException("Location of the Device not found!");
-        }
-
-        final String stmt = "INSERT INTO INSERT INTO Readings(data, kDevice,kLocation) " +
-                "VALUES(?, ?, ?);";
 
         /*
-            Executing Query
+            Pushing Reading
          */
-        PreparedStatement preparedStmt = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
+        final PreparedStatement preparedStmt = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
         preparedStmt.setString(1,reading.getDatetime());
-        preparedStmt.setInt(2,reading.getId());
+
+        /*
+            TODO:
+                convert datetime
+                perché usare long invece di int?
+         */
+        preparedStmt.setInt(2,idDevice);
         preparedStmt.setInt(3,kLocation);
+        preparedStmt.execute();
 
-        try {
+        ResultSet generatedKeys = preparedStmt.getGeneratedKeys();
 
-            ResultSet res = doQuery(preparedStmt, INSERT);
+        generatedKeys.next();
+        int kReading = generatedKeys.getInt(1);
+
+        if (DEBUG) {
+            System.out.println("kReading = "+kReading+" in addReading()");
         }
-        catch (SQLException e) {
-            throw new SQLException("Errore nella query addReading(): "+stmt);
+
+        if (conn != null) {
+            conn.close();
+            conn = null;
+        }
+
+        addValues(kReading, reading.getValue());
+    }
+
+    private void addValues(int kReading, List<ValueBean> values) throws ClassNotFoundException, SQLException {
+
+        if (DEBUG) {
+            System.out.println("Provo a connettermi...");
+        }
+
+        Class.forName("com.mysql.jdbc.Driver"); //deprecato
+        conn = DriverManager.getConnection(CONN_STRING);
+
+        if (DEBUG) {
+            System.out.println("Connesso" +
+                    "addReading() ...");
+        }
+
+        /*
+            Pushing Value
+         */
+
+        final String stmt = "INSERT INTO R_Values(sensorProgressive, reading, kReading) " +
+                "VALUES (?, ?, ?);";
+
+        final PreparedStatement pushValueStatement = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
+
+        for (ValueBean value : values) {
+            pushValueStatement.setInt(1,value.getSensorProgressive());
+            pushValueStatement.setDouble(2,value.getReading());
+            pushValueStatement.setInt(3, kReading);
+            pushValueStatement.execute();
+            ResultSet generatedKeys = pushValueStatement.getGeneratedKeys();
+            generatedKeys.next();
+            int idValue = generatedKeys.getInt(1);
+            if (DEBUG) {
+                System.out.println("generatedKeys() Pushing Value: "+idValue);
+            }
+        }
+
+        if (conn != null) {
+            conn.close();
+            conn = null;
+        }
+    }
+
+    /*
+        Get
+     */
+
+    public List<ReadingBean> getDeviceReadings(int id) throws ClassNotFoundException, SQLException {
+        if (DEBUG) {
+            System.out.println("Provo a connettermi...");
+        }
+
+        Class.forName("com.mysql.jdbc.Driver"); //deprecato
+        conn = DriverManager.getConnection(CONN_STRING);
+
+        if (DEBUG) {
+            System.out.println("Connesso " +
+                    "getDeviceId() ...");
+        }
+
+        final String stmt = "" +
+                "SELECT idReading, macAddress, data, name, sensorProgressive, reading\n" +
+                "FROM Devices \n" +
+                "INNER JOIN Readings ON idDevice = kDevice\n" +
+                "INNER JOIN Locations ON Readings.kLocation = idLocation\n" +
+                "INNER JOIN R_Values ON idReading = kReading  \n" +
+                "WHERE idDevice = ?;";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setInt(1, id);
+        ResultSet res = preparedStatement.executeQuery();
+        res.next();
+
+        ArrayList<ReadingBean> readings = new ArrayList<>();
+        ArrayList<ValueBean> values = new ArrayList<>();
+
+        String deviceMac = res.getString(2);
+
+
+        /*
+        TODO:
+            Capire se la location serve o no
+         */
+
+        /*
+            Concateno i values con le reading e li metto in una lista
+         */
+
+        while(true) {
+            if (res.isAfterLast()) {
+                break;
+            }
+            int currentIdReading = res.getInt("idReading");
+            if (DEBUG) {
+                System.out.println("currentIdReading = "+currentIdReading);
+            }
+            String date = res.getString("data");
+            String locationName = res.getString("name");
+
+            while (!res.isAfterLast() &&res.getInt("idReading") == currentIdReading) { //è sempre la stessa lettura
+                int sensorProgressive = res.getInt("sensorProgressive");
+                int reading = res.getInt("reading");
+
+                if (DEBUG) {
+                    System.out.println("sensorProgressive: "+sensorProgressive+ "\n" +
+                            "reading: "+reading);
+                }
+                ValueBean valueBean = new ValueBean(sensorProgressive,reading); //sensorProgressive and its reading temperature
+                values.add(valueBean);
+                res.next();
+            }
+            ReadingBean readingBean = new ReadingBean(deviceMac, date, values);
+            values = new ArrayList<>();
+            readings.add(readingBean);
+//            if (res.last()) {
+//                break;
+//            }
 
         }
 
@@ -232,6 +330,57 @@ public class SQLConnection {
             conn.close();
             conn = null;
         }
+
+        if (DEBUG){
+
+
+            System.out.println("readings:\n");
+            readings.forEach(System.out::println);
+        }
+
+        return readings;
+    }
+
+    public int getDeviceId(String mac) throws ClassNotFoundException, SQLException {
+        if (DEBUG) {
+            System.out.println("Provo a connettermi...");
+        }
+
+        Class.forName("com.mysql.jdbc.Driver"); //deprecato
+        if (DEBUG) {
+            System.out.println("CONN_SRING = "+CONN_STRING);
+        }
+        conn = DriverManager.getConnection(CONN_STRING);
+
+        if (DEBUG) {
+            System.out.println("Connesso " +
+                    "getDeviceId() ...");
+        }
+
+        final String stmt = "SELECT idDevice FROM Devices WHERE macAddress = ?";
+
+        final PreparedStatement preparedStatement = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, mac);
+
+        if (DEBUG) {
+            System.out.println("MAC = "+mac);
+        }
+
+        final ResultSet rs = preparedStatement.executeQuery();
+        rs.next();
+
+        if (DEBUG) {
+            System.out.println("Query done!");
+        }
+
+        int id = rs.getInt(1);
+
+        if (conn != null) {
+            conn.close();
+            conn = null;
+        }
+
+        return id;
     }
 
     public int getDeviceLocation(int id) throws ClassNotFoundException, SQLException {
@@ -243,7 +392,9 @@ public class SQLConnection {
         conn = DriverManager.getConnection(CONN_STRING);
 
         if (DEBUG) {
-            System.out.println("Connesso");
+            System.out.println("Connesso\n" +
+                    "getDeviceLocation() ...");
+
         }
 
         final String stmt = "SELECT kLocation\n" +
@@ -270,7 +421,7 @@ public class SQLConnection {
 
     public static void main(String [] args) throws SQLException, ClassNotFoundException {
         SQLConnection connection = SQLConnection.getInstance("jdbc:mysql://localhost:3306/test_alternanza?user=root&password=123456");
-        System.out.println(connection.getDeviceLocation(3));
+        System.out.println(connection.getDeviceId("ff:gg:hh:ii:ll:mm"));
     }
 //    private void mysql(){
 //        Connection conn = null;

@@ -34,17 +34,23 @@ import java.util.Map;
 
 public class ReadingBean{
 
-	private Integer id;
+	private String mac;
 	private String datetime;
 	private List<ValueBean> value = null;
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+	transient private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-	public Integer getId() {
-		return id;
+	public ReadingBean(String mac, String datetime, List<ValueBean> value) {
+		this.mac = mac;
+		this.datetime = datetime;
+		this.value = value;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public String getMac() {
+		return mac;
+	}
+
+	public void setMac(String mac) {
+		this.mac = mac;
 	}
 
 	public String getDatetime() {
@@ -71,10 +77,10 @@ public class ReadingBean{
 		this.additionalProperties.put(name, value);
 	}
 
-//	@Override
-//	public String toString() {
-//		return new ToStringBuilder(this).append("id", id).append("datetime", datetime).append("value", value).append("additionalProperties", additionalProperties).toString();
-//	}
+	@Override
+	public String toString() {
+		return new StringBuilder("mac" + mac).append("datetime" + datetime).append("value" + value).toString();
+	}
 
 }
 

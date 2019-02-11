@@ -8,7 +8,13 @@ public class ValueBean {
 
     private Integer sensorProgressive;
     private Double reading;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    transient private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    public ValueBean(int sensorProgressive, double reading) {
+        this.sensorProgressive = sensorProgressive;
+        this.reading = reading;
+    }
+
 
     public Integer getSensorProgressive() {
         return sensorProgressive;
@@ -26,6 +32,7 @@ public class ValueBean {
         this.reading = reading;
     }
 
+
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
@@ -34,9 +41,9 @@ public class ValueBean {
         this.additionalProperties.put(name, value);
     }
 
-//    @Override
-//    public String toString() {
-//        return new ToStringBuilder(this).append("sensorProgressive", sensorProgressive).append("reading", reading).append("additionalProperties", additionalProperties).toString();
-//    }
+    @Override
+    public String toString() {
+        return new StringBuilder("sensorProgressive" + sensorProgressive).append("reading" + reading).toString();
+    }
 
 }
