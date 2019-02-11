@@ -2,6 +2,7 @@ package Device;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import javax.servlet.ServletException;
@@ -22,8 +23,17 @@ import SQL.SQLConnection;
 public class Device extends HttpServlet {
 	final String [] SUPPORTED_OPERATIONS = new String[]{"devices", "readings", "\\d+"};
 
-	private SQLConnection sqlConnection = SQLConnection.getInstance(
-			"","","");
+	private SQLConnection sqlConnection;
+
+	{
+		try {
+			sqlConnection = SQLConnection.getInstance("","","");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private final static String CONN_STRING = "jdbc:mysql://localhost:3306/test_alternanza?user=root&password=123456";
 	final static boolean DEBUG = true;
@@ -150,15 +160,16 @@ public class Device extends HttpServlet {
 
 	 */
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		PrintWriter out = response.getWriter();
 		String [] strings = request.getRequestURI().split("/");
 		String endpoint = strings[strings.length-1];
 
-		if (isSupported(endpoint)){
+		if (!isSupported(endpoint)){
 			response.setStatus(404);
 			out.append("Operazione non supportata");
+			return;
 		}
 
 		String json = request.getReader().lines()
@@ -172,6 +183,29 @@ public class Device extends HttpServlet {
 			if (DEBUG) {
 				System.out.println("POST "+request.getRequestURI());
 			}
+
+			response.setContentType("text/html");
+
+			try {
+
+				addDevice(json);
+			}
+			catch (SQLException sqle) { //TODO: ricontrollare gli status error
+				sqle.printStackTrace();
+				response.setStatus(404);
+				out.append(sqle.getMessage());
+				return;
+			}
+			catch (ClassNotFoundException cnfe) {
+				cnfe.printStackTrace();
+				response.setStatus(404);
+				out.append(cnfe.getMessage());
+				return;
+			}
+
+			response.setStatus(201);
+			out.append("Nuovo dispositivo aggiunto");
+			return;
 		}
 
 		if(endpoint.equals("readings")) { //registrazione nuova reading
@@ -182,17 +216,18 @@ public class Device extends HttpServlet {
 
 			int id = parseAvailableId(strings[strings.length-2]);
 
+			response.setContentType("text/html");
+
 			if (id == -1) {
-				response.setContentType("text/html");
 				response.setStatus(404);
 				out.append("ID non esistente o sbagliato");
 				return;
 			}
 
+			//addReading(2);
 
-			response.setContentType("application/json");
 			response.setStatus(201);
-			out.append(String.valueOf(addReading(id)));
+			out.append("Lettura aggiunta con successo");
 			return;
 		}
 
@@ -285,8 +320,31 @@ public class Device extends HttpServlet {
 		return devices;
 	}
 
-	private boolean addReading(int id) {
+	/*
+.----------------.  .----------------.  .----------------.  .----------------.
+| .--------------. || .--------------. || .--------------. || .--------------. |
+| |   ______     | || |     ____     | || |    _______   | || |  _________   | |
+| |  |_   __ \   | || |   .'    `.   | || |   /  ___  |  | || | |  _   _  |  | |
+| |    | |__) |  | || |  /  .--.  \  | || |  |  (__ \_|  | || | |_/ | | \_|  | |
+| |    |  ___/   | || |  | |    | |  | || |   '.___`-.   | || |     | |      | |
+| |   _| |_      | || |  \  `--'  /  | || |  |`\____) |  | || |    _| |_     | |
+| |  |_____|     | || |   `.____.'   | || |  |_______.'  | || |   |_____|    | |
+| |              | || |              | || |              | || |              | |
+| '--------------' || '--------------' || '--------------' || '--------------' |
+ '----------------'  '----------------'  '----------------'  '----------------'
+	 */
 
+	private void addDevice(String json) throws SQLException, ClassNotFoundException {
+		Gson gson = new Gson();
+		DeviceBean device = gson.fromJson(json, DeviceBean.class);
+		SQLConnection connection = SQLConnection.getInstance(CONN_STRING);
+		connection.addDevice(device);
+	}
+
+	private boolean addReading(String json) throws SQLException, ClassNotFoundException {
+		Gson gson = new Gson();
+		ReadingBean reading = gson.fromJson(json, ReadingBean.class);
+		SQLConnection connection = SQLConnection.getInstance(CONN_STRING);
 		return true;
 	}
 }
