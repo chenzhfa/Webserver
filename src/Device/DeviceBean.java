@@ -9,9 +9,12 @@ public class DeviceBean {
 	private Integer id;
 	private String mac;
 	private Integer location;
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+	transient private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 	public DeviceBean(String mac, Integer location) {
+		new DeviceBean(null, mac, location);
+	}
+	public DeviceBean(Integer id, String mac, Integer location) {
 		this.location = location;
 		this.mac = mac;
 	}

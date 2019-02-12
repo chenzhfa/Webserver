@@ -1,5 +1,8 @@
 package Location;
 
+import SQL.SQLConnection;
+import com.google.gson.Gson;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +19,10 @@ public class LocationServlet extends HttpServlet {
     final String [] SUPPORTED_OPERATIONS = new String[]{"locations", "readings"};
     final boolean DEBUG = true;
 
-
+    private final static String dbName = "test_alternanza";
+    private final static String dbUser = "root";
+    private final static String dbUserPwd = "123456";
+    private final static String CONN_STRING = "jdbc:mysql://localhost:3306/"+dbName+"?user="+dbUser+"&password="+dbUserPwd;
     /*
     TODO:
         ENDPOINT /locations : ritorna tutte le locations
@@ -49,18 +55,22 @@ public class LocationServlet extends HttpServlet {
                 System.out.println("GET : ritorno tutte le reading di una location");
             }
 
-            response.setContentType("application/json");
-
             int idLocation = parseAvailableLocationId(location);
 
             if (idLocation == -1) {
-                response.setStatus(404);
-                out.append("Operazione non supportata");
+                response.sendError(404);
             }
 
             response.setContentType("application/json");
-            response.setStatus(200);
-            out.println(getReadingsOf(idLocation));
+            try {
+                response.setStatus(200);
+                out.println(getReadingsOf(idLocation));
+            } catch (SQLException e) {
+                out.println("{}");
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -101,16 +111,10 @@ public class LocationServlet extends HttpServlet {
         return locations;
     }
 
-    private String getReadingsOf(int idLocation) {
-        String res = "[\\r\\n" +
-                "  {\\r\\n    " +
-                "\\\"id\\\": 2,\\r\\n    " +
-                "\\\"datetime\\\": \\\"2019-01-30 23:18:29\\\",\\r\\n    " +
-                "\\\"value\\\": [\\r\\n      {\\r\\n        " +
-                "\\\"sensorProgressive\\\": 0,\\r\\n        " +
-                "\\\"reading\\\": 19.2\\r\\n      },\\r\\n      " +
-                "{\\r\\n        \\\"sensorProgressive\\\": 1,\\r\\n        " +
-                "\\\"reading\\\": 19.5\\r\\n      }\\r\\n    ]\\r\\n  }\\r\\n]";
+    private String getReadingsOf(int idLocation) throws SQLException, ClassNotFoundException {
+        Gson gson = new Gson();
+        SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);
+        String res = gson.toJson(sqlConnection.getLocationReadings(idLocation));
         return res;
     }
 

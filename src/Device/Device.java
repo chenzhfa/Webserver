@@ -75,13 +75,16 @@ public class Device extends HttpServlet {
 		
 		if(endpoint.equals("devices")) {
 
-			if (DEBUG) {
-				System.out.println("GET localhost:8080/devices");
-			}
-
 			response.setContentType("application/json");
-			response.setStatus(200);
-			out.append(getDevicesJson());
+			try {
+				out.println(getDevicesJson());
+				response.setStatus(200);
+			} catch (SQLException e) {
+				out.println("{}");
+				response.setStatus(204);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 			return;
 		}
 
@@ -107,16 +110,24 @@ public class Device extends HttpServlet {
 			int id = parseAvailableId(strings[strings.length-2]);
 
 			if (id == -1) {
+				response.sendError(404);
 				out.append("ID non esistente o sbagliato");
 				return;
 			}
 
-			out.append(getReadings(id));
+			response.setContentType("application/json");
+			try {
+				out.println(getReadings(id));
+			} catch (SQLException e) {
+				out.println("{}");
+			} catch (ClassNotFoundException e) {
+				response.sendError(404);
+			}
 			return;
 		}
 
 		/*
-		 * ENDPOINT /devices/current : ritorna le informazioni di un dispositivo
+		 * ENDPOINT /devices/current : ritorna le letture di un dispositivo
 		 */
 
 
@@ -143,14 +154,14 @@ public class Device extends HttpServlet {
 				return;
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
+				response.setStatus(500);
+				out.println("Errore interno!");
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
-			finally {
 				response.setStatus(204); //richiesta andata a buon fine ma non ha prodotto risultati
 				out.println("Non sono stati trovati.");
-				return;
 			}
+			return;
 		}
 
 		/*
@@ -158,14 +169,15 @@ public class Device extends HttpServlet {
 		 */
 
 		int id = parseAvailableId(endpoint);
-		if (id != -1) {
-			response.setContentType("application/json");
-			response.setStatus(200);
-			out.append(getDeviceInfo(id));
+		response.setContentType("application/json");
+
+		if (id == -1) {
+			response.sendError(404);
+			return;
 		}
 
-		response.setStatus(404);
-		out.append("Operazione non supportata");
+		response.setStatus(200);
+		out.println(getDeviceInfo(id));
 		return;
 	}
 		
@@ -214,22 +226,20 @@ public class Device extends HttpServlet {
 			try {
 
 				addDevice(json);
+				response.setStatus(201);
+				out.append("Nuovo dispositivo aggiunto");
 			}
 			catch (SQLException sqle) { //TODO: ricontrollare gli status error
 				sqle.printStackTrace();
 				response.setStatus(404);
 				out.append(sqle.getMessage());
-				return;
 			}
 			catch (ClassNotFoundException cnfe) {
 				cnfe.printStackTrace();
 				response.setStatus(404);
 				out.append(cnfe.getMessage());
-				return;
 			}
 
-			response.setStatus(201);
-			out.append("Nuovo dispositivo aggiunto");
 			return;
 		}
 
@@ -261,20 +271,17 @@ public class Device extends HttpServlet {
 
 			try {
 				addReading(json, deviceMac);
+				response.setStatus(201);
+				out.append("Lettura aggiunta con successo");
 			} catch (SQLException e) { //TODO: ricontrollare gli status error
 				e.printStackTrace();
 				response.setStatus(404);
 				out.append(e.getMessage());
-				return;
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 				response.setStatus(404);
 				out.append(e.getMessage());
-				return;
 			}
-
-			response.setStatus(201);
-			out.append("Lettura aggiunta con successo");
 			return;
 		}
 
@@ -324,46 +331,24 @@ public class Device extends HttpServlet {
 	/*
 	 * Bisogna passargli l'ID del dispositivo di cui si vogliono ottenere le letture
 	 */
-	private String getReadings(int id) {
-		String lettura = 
-				"["+
-				  "{"+
-				    "id : 2,"+
-				    "value : ["+
-				      "{" +
-				        "sensorProgressive : 0,"+
-				        "reading : 19.2" +
-				      "}," +
-				      "{" +
-				        "sensorProgressive : 1,"+ 
-				        "reading : 19.5"+ 
-				      "}" +
-				    "]" +
-				  "}" +
-				"]";
-		System.out.println("lettura = \n"+lettura);
-		return lettura;
+	private String getReadings(int id) throws SQLException, ClassNotFoundException {
+		SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);
+		Gson gson = new Gson();
+		String json = gson.toJson(sqlConnection.getDeviceReadings(id));
+		System.out.println("lettura = \n"+json);
+		return json;
 	}
 	
 	private String getDeviceInfo(int id) {
 		return "";
 	}
 	
-	private String getDevicesJson() {
+	private String getDevicesJson() throws SQLException, ClassNotFoundException {
 
-		String devices = ""
-				+ "[\r\n" + 
-				"  {\r\n" + 
-				"    \"id\": 1,\r\n" + 
-				"    \"mac\": \"AA:BB:CC:DD:EE:FF\",\r\n" + 
-				"    \"location\": 3\r\n" + 
-				"  },\r\n" +
-				"{\r\n" + 
-				"    \"id\": 2,\r\n" + 
-				"    \"mac\": \"GG:HH:II:LL:MM:NN\",\r\n" + 
-				"    \"location\": 2\r\n" + 
-				"  }\r\n"+ 
-				"]";
+		SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);
+
+		Gson gson = new Gson();
+		String devices = gson.toJson(sqlConnection.getAllDevices());
 		return devices;
 	}
 
