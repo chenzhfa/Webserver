@@ -1,6 +1,7 @@
 # Webserver
 
 WORKING:
+
 	POST:
 		Adding new device via POST at /devices
 		Adding a new reading via POST at /devices/current
@@ -17,6 +18,7 @@ NOT WORKING:
     
 	
 TODOLIST:
+
 	When inserting a new device or location check whether it already
 	exists or not.
 	
