@@ -21,14 +21,13 @@ import SQL.SQLConnection;
  */
 @WebServlet(name = "Device")
 public class Device extends HttpServlet {
-	final String [] SUPPORTED_OPERATIONS = new String[]{"devices", "readings", "\\d+"};
+	final String [] SUPPORTED_OPERATIONS = new String[]{"devices", "readings", "\\d+","current"};
 
 
 	private final static String dbName = "test_alternanza";
 	private final static String dbUser = "root";
 	private final static String dbUserPwd = "123456";
 	private final static String CONN_STRING = "jdbc:mysql://localhost:3306/"+dbName+"?user="+dbUser+"&password="+dbUserPwd;
-	//private final static String CONN_STRING = "jdbc:mysql://localhost:3306/test_alternanza?user=root&password=123456";
 	final static boolean DEBUG = true;
 	private static final long serialVersionUID = 1L;
        
@@ -64,8 +63,7 @@ public class Device extends HttpServlet {
 		//CHECKING IF THE OPERATION IS SUPPORTED
 
 		if (!isSupported(endpoint)) {
-			response.setStatus(404);
-			out.append("Operazione non supportata");
+			response.sendError(404);
 		}
 
 
@@ -84,6 +82,7 @@ public class Device extends HttpServlet {
 				response.setStatus(204);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
+				response.sendError(500);
 			}
 			return;
 		}
@@ -97,13 +96,31 @@ public class Device extends HttpServlet {
 			response.setContentType("application/json");
 			String device = strings[strings.length-2];
 
-			if (DEBUG) {
-				System.out.println("GET localhost:8080/devices/{id}/readings");
-			}
-
 			if (device.equals("current")) {
-				//TODO: do whatever
-				response.setContentType("text/plain");
+				//TODO: change status error
+				String deviceMac = request.getHeader("X-MAC-Address");
+				if (device == null || device.equals("")) {
+					response.sendError(404);
+				}
+				try {
+					SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);
+					int id = sqlConnection.getDeviceId(deviceMac);
+
+					Gson gson = new Gson();
+					String json = gson.toJson(sqlConnection.getDeviceReadings(id));
+
+					response.setStatus(200);
+					out.println(json);
+					return;
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+					response.setStatus(500);
+					out.println("Errore interno!");
+				} catch (SQLException e) {
+					e.printStackTrace();
+					response.setStatus(204); //richiesta andata a buon fine ma non ha prodotto risultati
+					out.println("{}");
+				}
 				return;
 			}
 
@@ -127,7 +144,7 @@ public class Device extends HttpServlet {
 		}
 
 		/*
-		 * ENDPOINT /devices/current : ritorna le letture di un dispositivo
+		 * ENDPOINT /devices/current : ritorna le info di un dispositivo
 		 */
 
 
@@ -135,31 +152,15 @@ public class Device extends HttpServlet {
 		if (endpoint.equals("current")) {
 			String deviceMac = request.getHeader("X-MAC-Address");
 
-			if (DEBUG) {
-				System.out.println("current deviceMac = "+deviceMac);
-			}
 			try {
-				SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);
-				int id = sqlConnection.getDeviceId(deviceMac);
-
-				Gson gson = new Gson();
-				String json = gson.toJson(sqlConnection.getDeviceReadings(id));
-
 				response.setStatus(200);
-				if (DEBUG) {
-					System.out.println("json = "+json);
-				}
-
-				out.println(json);
-				return;
+				out.println(getDeviceInfo(deviceMac));
+			} catch (SQLException e) {
+				response.setStatus(204);
+				out.println("{}");
+				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-				response.setStatus(500);
-				out.println("Errore interno!");
-			} catch (SQLException e) {
-				e.printStackTrace();
-				response.setStatus(204); //richiesta andata a buon fine ma non ha prodotto risultati
-				out.println("Non sono stati trovati.");
 			}
 			return;
 		}
@@ -176,8 +177,16 @@ public class Device extends HttpServlet {
 			return;
 		}
 
-		response.setStatus(200);
-		out.println(getDeviceInfo(id));
+		try {
+			response.setStatus(200);
+			out.println(getDeviceInfo(id));
+		} catch (SQLException e) {
+			response.setStatus(204);
+			out.println("{}");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		return;
 	}
 		
@@ -288,18 +297,6 @@ public class Device extends HttpServlet {
 		response.setStatus(404);
 		out.append("Operazione non supportata");
 	}
-	
-	/*
-	 * 
-	 * 
-	 * METHODS
-	 * 
-	 * 
-	 */
-
-	/*
-		Check if supported type
-	 */
 
 	private boolean isSupported(String endpoint) {
 		String res = Arrays.stream(SUPPORTED_OPERATIONS).filter( it -> endpoint.matches(it))
@@ -311,6 +308,18 @@ public class Device extends HttpServlet {
 
 		return true;
 	}
+
+	/*
+	 *
+	 *
+	 * METHODS
+	 *
+	 *
+	 */
+
+	/*
+		Check if supported type
+	 */
 
 	/*
 		@return -1 error
@@ -339,10 +348,22 @@ public class Device extends HttpServlet {
 		return json;
 	}
 	
-	private String getDeviceInfo(int id) {
-		return "";
+	private String getDeviceInfo(String mac) throws SQLException, ClassNotFoundException {
+		SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);
+		Gson gson = new Gson();
+		String json = gson.toJson(sqlConnection.getDeviceInfo(sqlConnection.getDeviceId(mac)));
+		return json;
 	}
-	
+
+	private String getDeviceInfo(int id) throws SQLException, ClassNotFoundException {
+		SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);
+		Gson gson = new Gson();
+		String json = gson.toJson(sqlConnection.getDeviceInfo(id));
+		return json;
+	}
+
+
+
 	private String getDevicesJson() throws SQLException, ClassNotFoundException {
 
 		SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);

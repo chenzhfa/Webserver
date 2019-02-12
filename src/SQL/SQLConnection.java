@@ -3,8 +3,9 @@ package SQL;
 import Device.DeviceBean;
 import Device.ReadingBean;
 import Device.ValueBean;
+import Location.LocationBean;
 
-import javax.xml.transform.Result;
+import javax.xml.stream.Location;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +86,39 @@ public class SQLConnection {
      */
 
 
+    public DeviceBean getDeviceInfo(int id) throws SQLException, ClassNotFoundException {
+        if (DEBUG) {
+            System.out.println("Provo a connettermi...");
+        }
+
+        Class.forName("com.mysql.jdbc.Driver"); //deprecato
+        conn = DriverManager.getConnection(CONN_STRING);
+
+        if (DEBUG) {
+            System.out.println("Connesso");
+        }
+
+        DeviceBean device = null;
+
+        final String stmt = "SELECT idDevice, macAddress, kLocation\n" +
+                "FROM Devices\n" +
+                "WHERE idDevice = ?;";
+
+        final PreparedStatement preparedStatement = conn.prepareStatement(stmt);
+        preparedStatement.setInt(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
+        rs.next();
+
+        device = new DeviceBean(rs.getInt(1), rs.getString(2), rs.getInt(3));
+
+        if (conn != null) {
+            conn.close();
+            conn = null;
+        }
+
+        return device;
+    }
+
     public List<DeviceBean> getAllDevices() throws ClassNotFoundException, SQLException {
 
         if (DEBUG) {
@@ -119,17 +153,6 @@ public class SQLConnection {
 
         return devices;
     }
-
-//    public void getAllReadings() throws SQLException {
-//        if (conn == null) {
-//            conn = DriverManager.getConnection(CONN_STRING);
-//        }
-//
-//        Statement stmt = conn.createStatement();
-//        ResultSet rs = stmt.executeQuery("SELECT * FROM Readings");
-//        while(rs.next())
-//            System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
-//    }
 
     /*
     TODO:
@@ -487,7 +510,6 @@ public class SQLConnection {
     }
 
     public List<ReadingBean> getLocationReadings(int idLocation) throws SQLException, ClassNotFoundException {
-        
         final String stmt = "SELECT idReading, macAddress, data, name, sensorProgressive, reading\n" +
                 "FROM Devices \n" +
                 "INNER JOIN Readings ON idDevice = kDevice\n" +
@@ -565,5 +587,36 @@ public class SQLConnection {
         return readings;
     }
 
+    public List<LocationBean> getLocations() throws ClassNotFoundException, SQLException {
+
+        if (DEBUG) {
+            System.out.println("Provo a connettermi...");
+        }
+
+        Class.forName("com.mysql.jdbc.Driver"); //deprecato
+        conn = DriverManager.getConnection(CONN_STRING);
+
+        if (DEBUG) {
+            System.out.println("Connesso " +
+                    "getDeviceId() ...");
+        }
+
+        final String stmt = "SELECT idLocation, name\n" +
+                "FROM Locations;";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(stmt);
+        ResultSet rs = preparedStatement.executeQuery();
+        final ArrayList<LocationBean> locations = new ArrayList<>();
+        while(rs.next()) {
+            locations.add(new LocationBean(rs.getInt(1), rs.getString(2)));
+        };
+
+        if (conn != null) {
+            conn.close();
+            conn = null;
+        }
+
+        return locations;
+    }
 
 }

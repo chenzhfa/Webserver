@@ -45,7 +45,15 @@ public class LocationServlet extends HttpServlet {
             }
 
             response.setContentType("application/json");
-            out.println(getLocations());
+            try {
+                out.println(getLocations());
+                response.setStatus(200);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                out.println("{}");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         if (endpoint.equals("readings")) {
@@ -103,12 +111,11 @@ public class LocationServlet extends HttpServlet {
         return true;
     }
 
-    private String getLocations(){
-        String locations = "{\r\n  " +
-                "\"id\": 3,\r\n  " +
-                "\"name\": \"Laboratorio di Sistemi Informatici\"\r\n}";
-
-        return locations;
+    private String getLocations() throws SQLException, ClassNotFoundException {
+        SQLConnection sqlConnection = SQLConnection.getInstance(CONN_STRING);
+        Gson gson = new Gson();
+        String json = gson.toJson(sqlConnection.getLocations());
+        return json;
     }
 
     private String getReadingsOf(int idLocation) throws SQLException, ClassNotFoundException {

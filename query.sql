@@ -82,3 +82,14 @@ INNER JOIN Locations ON Readings.kLocation = idLocation
 INNER JOIN R_Values ON idReading = kReading  
 WHERE idLocation = 2
 GROUP BY idReading, sensorProgressive, reading;
+
+/*Get a device info*/
+
+SELECT idDevice, macAddress, kLocation
+FROM Devices
+WHERE idDevice = 2;
+
+/*Get all locations*/
+
+SELECT idLocation, name
+FROM Locations;
