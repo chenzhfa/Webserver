@@ -8,25 +8,6 @@ import java.util.HashMap;
  *	Quando invio le temperature ne invio una serie o una alla volta?
  *  https://app.swaggerhub.com/apis-docs/sorby/SensoriASL/1.0.0-oas3#/Rilevazioni%20di%20un%20microcontrollore/addDeviceReading
 */
-//
-//public class ReadingBean {
-//
-//	public final String id;
-//	public final int sensorProgressive;
-//	public final double reading;
-//
-//	ReadingBean(String id, int sensorProgressive, double reading) {
-//		this.id = id;
-//		this.sensorProgressive = sensorProgressive;
-//		this.reading = reading;
-//	}
-//
-//	@Override
-//		public String toString() {
-//			// TODO Auto-generated method stub
-//			return id+";"+sensorProgressive+";"+reading+";";
-//		}
-//}
 
 
 import java.util.List;

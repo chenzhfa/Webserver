@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,11 +45,10 @@ public class Device extends HttpServlet {
 		TODO:
 			Prende tutti i dispositivi registrati
 			Ritorna tutte le letture di un dispositivo
-			Ritorna le informazioni di un dispositivo current: non fatto
+			Ritorna le informazioni di un dispositivo current
 			Ritorna le informazioni di un dispositivo
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		/*
 			Getting endpoint option
